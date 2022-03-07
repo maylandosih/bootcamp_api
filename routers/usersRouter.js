@@ -7,5 +7,9 @@ router.get('/get', usersController.getData);
 router.post('/register', usersController.register);
 router.post('/login', usersController.login);
 router.get('/keep-login', readToken, usersController.keepLogin);
-router.patch('/verified', readToken, usersController.accountVerification)
+router.patch('/verified', readToken, usersController.accountVerification);
+router.post('/forgotPassword', usersController.forgotPassword);
+router.post("/resetPassword", usersController.resetPassword);
+router.post("/changePassword", usersController.changePassword);
+
 module.exports = router
