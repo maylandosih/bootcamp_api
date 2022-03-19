@@ -136,7 +136,7 @@ module.exports = {
 
             let token = createToken({ user_id, email });
             console.log(token)
-            
+
             let mail = {
                 from: `Admin <Lumbantoruan0705@gmail.com>`,
                 to: `${email}`,
@@ -213,4 +213,32 @@ module.exports = {
             });
         });
     },
+    getAddress: async (req, res) => {
+        try {
+            let getAddress = `SELECT * FROM warehouse.address
+        WHERE user_id = ${db.escape(req.dataUser.user_id)};`
+
+            getAddress = await dbQuery(getAddress)
+
+            res.status(200).send(getAddress)
+        } catch (error) {
+            console.log(error)
+            res.status(500).send(error)
+        }
+    },
+    addAddress: async (req, res) => {
+        try {
+            let addAddress = `INSERT INTO address values (null, ${db.escape(req.body.user_id)}, 
+        '${db.escape(req.body.alamat)}', '${db.escape(req.body.kota)}', ${db.escape(req.body.kode_pos)});`
+
+            addAddress = await dbQuery(addAddress)
+
+            if (addAddress.insertId) {
+                res.status(200).send({ message: "Add address success ✅", success: true })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).send(error)
+        }
+    }
 }
