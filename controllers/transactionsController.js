@@ -41,5 +41,47 @@ module.exports = {
             console.log(error)
             res.status(500).send(error)
         }
+    },
+
+    getReportSales: async (req, res) => {
+        try {
+            let scriptQuery = `select DATE_FORMAT(t.transaction_date,"%e %M %Y") AS 'Date,
+           td.nama_produk,
+           td.qty,
+           t.harga_jual,
+           from transaction_details td
+           join transactions t
+           on t.transaction_id=td.transaction_id
+           where t.payment_status = "paid" && t.transaction_type = "normal"
+           order by t.transaction_id`
+
+            await dbQuery(scriptQuery);
+
+            res.status(200).send(res)
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).send(err)
+        }
+
+    },
+
+    getRevenue: async (req, res) => {
+        try {
+            let scriptQuery = `select
+            sum(t.harga_jual) AS "Revenue"
+            from transaction_details td
+            join transactions t on t.transaction_id = td.transaction_id
+            where t.payment_status = "paid"
+            order by t.transaction_id;`
+
+            await dbQuery(scriptQuery);
+
+            res.status(200).send(res)
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).send(err)
+        }
     }
 }
